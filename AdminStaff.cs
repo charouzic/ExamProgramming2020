@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 namespace ExamProgramming
 {
     // this class stores administrative staff members (3 in total)
@@ -8,6 +10,14 @@ namespace ExamProgramming
         {
             Role = role;
         }
-        public string Role { get; set; } 
+        public string Role { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            str.Append(base.ToString());
+            str.AppendLine($"Role: {Role}");
+            return str.ToString();
+        }
     }
 }
