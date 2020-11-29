@@ -5,7 +5,7 @@ using System.IO;
 namespace ExamProgramming
 {
     // this class will make the code to run and will be run from Program.cs
-    public class Processor : IClient
+    public class Processor : IClient, IAppointment
     {
         // instantiating the list for clients
         List<Client> Clients = new List<Client>();
@@ -25,125 +25,131 @@ namespace ExamProgramming
 
         public int Login()
         {
-            Console.WriteLine("Please provide your login details");
-
-            // authenticated: 0 = no authentication, 1 = lawyer, 2 = administrative staff, 3 = receptionist
-            int authenticated = 0;
-            
-            Console.Write("User name: ");
-            string userName = Console.ReadLine();
-
-            Console.Write("Password: ");
-            string pwd = Console.ReadLine();
-
-            if (userName == lawyerUsrName && pwd == lawyerPwd)
+            while(true)
             {
-                authenticated = 1;
-            }
+                Console.WriteLine("Please provide your login details");
 
-            if (userName == adminStaffUsrName && pwd == adminStaffPwd)
-            {
-                authenticated = 2;
-            }
+                // authenticated: 0 = no authentication, 1 = lawyer, 2 = administrative staff, 3 = receptionist
+                int authenticated = 0;
 
-            if (userName == receptionUsrName && pwd == receptionPwd)
-            {
-                authenticated = 3;
-            }
+                Console.Write("User name: ");
+                string userName = Console.ReadLine();
 
-            return authenticated;
+                Console.Write("Password: ");
+                string pwd = Console.ReadLine();
+
+                if (userName == lawyerUsrName && pwd == lawyerPwd)
+                {
+                    authenticated = 1;
+                    return authenticated;
+                }
+
+                else if (userName == adminStaffUsrName && pwd == adminStaffPwd)
+                {
+                    authenticated = 2;
+                    return authenticated;
+                }
+
+                else if (userName == receptionUsrName && pwd == receptionPwd)
+                {
+                    authenticated = 3;
+                    return authenticated;
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect login name and/or password\n");
+                }
+            }
         }
 
         public void Menu(int loginAuthentication)
         {
-            switch (loginAuthentication)
+            while(true)
             {
-                case 1:
-                    Console.WriteLine("*** Welcome to lawyer menu ***");
-                    Console.WriteLine("Here are you options");
-                    Console.WriteLine("1) List all cases");
-                    Console.WriteLine("2) Add a new case");
-                    Console.WriteLine("3) List all appointments");
-                    Console.Write("Press number of your option: ");
-                    int menuOptionLawyer = int.Parse(Console.ReadLine());
+                switch (loginAuthentication)
+                {
+                    case 1:
+                        Console.WriteLine("*** Welcome to lawyer menu ***");
+                        Console.WriteLine("Here are you options");
+                        Console.WriteLine("1) List all cases");
+                        Console.WriteLine("2) Add a new case");
+                        Console.WriteLine("3) List all appointments");
+                        Console.Write("Press number of your option: ");
+                        int menuOptionLawyer = int.Parse(Console.ReadLine());
 
-                    switch (menuOptionLawyer)
-                    {
-                        case 1:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all cases");
-                            break;
-                        case 2:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Adding a new case");
-                            break;
-                        case 3:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all appointments");
-                            break;
-                        default:
-                            Console.WriteLine("Invalid input");
-                            break;
+                        switch (menuOptionLawyer)
+                        {
+                            case 1:
+                                // TODO: call the method after the it's written
+                                Console.WriteLine("Listing all cases");
+                                break;
+                            case 2:
+                                // TODO: call the method after the it's written
+                                Console.WriteLine("Adding a new case");
+                                break;
+                            case 3:
+                                // TODO: call the method after the it's written
+                                ListAppointment(Appointments);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid input");
+                                break;
 
-                    }
-                    break;
+                        }
+                        break;
 
-                case 2:
-                    Console.WriteLine("*** Welcome to Administrative staff menu ***");
-                    Console.WriteLine("Here are you options");
-                    Console.WriteLine("1) List all cases");
-                    Console.WriteLine("2) List all appointments");
-                    Console.Write("Press number of your option: ");
-                    int menuOptionAdm = int.Parse(Console.ReadLine());
+                    case 2:
+                        Console.WriteLine("*** Welcome to Administrative staff menu ***");
+                        Console.WriteLine("Here are you options");
+                        Console.WriteLine("1) List all cases");
+                        Console.WriteLine("2) List all appointments");
+                        Console.Write("Press number of your option: ");
+                        int menuOptionAdm = int.Parse(Console.ReadLine());
 
-                    switch (menuOptionAdm)
-                    {
-                        case 1:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all cases");
-                            break;
-                        case 2:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all appointments");
-                            break;
-                        default:
-                            Console.WriteLine("Invalid input");
-                            break;
-                    }
-                    break;
+                        switch (menuOptionAdm)
+                        {
+                            case 1:
+                                // TODO: call the method after the it's written
+                                Console.WriteLine("Listing all cases");
+                                break;
+                            case 2:
+                                ListAppointment(Appointments);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid input");
+                                break;
+                        }
+                        break;
 
-                case 3:
-                    Console.WriteLine("*** Welcome to Receptionist staff menu ***");
-                    Console.WriteLine("Here are you options");
-                    Console.WriteLine("1) Register a new client");
-                    Console.WriteLine("2) Add a new appointment");
-                    Console.WriteLine("3) List all appointments");
-                    Console.WriteLine("4) List all clients");
-                    Console.Write("Press number of your option: ");
-                    int menuOptionReception = int.Parse(Console.ReadLine());
-                    switch (menuOptionReception)
-                    {
-                        case 1:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Registering a new client");
-                            break;
-                        case 2:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Adding a new appointments");
-                            break;
-                        case 3:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all appointments");
-                            break;
-                        case 4:
-                            // TODO: call the method after the it's written
-                            Console.WriteLine("Listing all clients");
-                            break;
-                        default:
-                            Console.WriteLine("Invalid input");
-                            break;
-                    }
-                    break;
+                    case 3:
+                        Console.WriteLine("*** Welcome to Receptionist staff menu ***");
+                        Console.WriteLine("Here are you options");
+                        Console.WriteLine("1) Register a new client");
+                        Console.WriteLine("2) Add a new appointment");
+                        Console.WriteLine("3) List all appointments");
+                        Console.WriteLine("4) List all clients");
+                        Console.Write("Press number of your option: ");
+                        int menuOptionReception = int.Parse(Console.ReadLine());
+                        switch (menuOptionReception)
+                        {
+                            case 1:
+                                AddNewClient();
+                                break;
+                            case 2:
+                                AddAppointment();
+                                break;
+                            case 3:
+                                ListAppointment(Appointments);
+                                break;
+                            case 4:
+                                ListClients(Clients);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid input");
+                                break;
+                        }
+                        break;
+                }
             }
         }
 
@@ -324,6 +330,69 @@ namespace ExamProgramming
             foreach (var o in clients)
             {
                 Console.WriteLine(o);
+            }
+        }
+
+        public int appointmentCounter = 0;
+
+        public void AddAppointment()
+        {
+            Console.WriteLine("Please provide following information about the appointment");
+
+            Console.Write("Appointment Id: ");
+            int app_Id = int.Parse(Console.ReadLine());
+
+            // wasnt sure how to do it, should we create enums or sth based on the client id?
+            Console.Write("Client Id: ");
+            int app_CId = int.Parse(Console.ReadLine());
+
+            Console.Write("Date and hour of appointment (e.g. 15-12-2020, 12:30): ");
+            DateTime app_Doa = DateTime.ParseExact(Console.ReadLine(), "dd-MM-yyyy, HH:m", null);
+
+            Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
+            int app_Room = int.Parse(Console.ReadLine());
+
+            switch (app_Room)
+            {
+                case 0:
+                    Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Aquarium);
+                    Appointments.Add(newAppointmentAqua);
+                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
+                    appointmentCounter++;
+                    break;
+
+                case 1:
+                    Appointment newAppointmentCube = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Cube);
+                    Appointments.Add(newAppointmentCube);
+                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
+                    appointmentCounter++;
+                    break;
+
+                case 2:
+                    Appointment newAppointmentCave = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Cave);
+                    Appointments.Add(newAppointmentCave);
+                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
+                    appointmentCounter++;
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid input");
+                    break;
+            }
+        }
+
+        public void ListAppointment(List<Appointment> appointments)
+        {
+            if (appointmentCounter == 0)
+            {
+                Console.WriteLine("No appointments are listed yet!");
+            }
+            else if (appointmentCounter > 0)
+            {
+                foreach (var a in appointments)
+                {
+                    Console.WriteLine(a);
+                }
             }
         }
 
