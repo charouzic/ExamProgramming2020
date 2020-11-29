@@ -25,7 +25,11 @@ namespace ExamProgramming
 
         public int Login()
         {
-            while(true)
+            Console.WriteLine("Choose your login option. Press [1] for Lawyer, press [2] for Admin or press [3] for Receptionist.");
+            Console.Write("Your choice: ");
+            int userType = int.Parse(Console.ReadLine());
+            // do we want to let the user choose the menu option again  if he inputs incorrect login details?
+            while (true)
             {
                 Console.WriteLine("Please provide your login details");
 
@@ -38,26 +42,43 @@ namespace ExamProgramming
                 Console.Write("Password: ");
                 string pwd = Console.ReadLine();
 
-                if (userName == lawyerUsrName && pwd == lawyerPwd)
+                switch(userType)
                 {
-                    authenticated = 1;
-                    return authenticated;
-                }
+                    case 1:
+                        if (userName == lawyerUsrName && pwd == lawyerPwd)
+                        {
+                            authenticated = 1;
+                            return authenticated;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect login name and/or password\n");
+                        }
+                        break;
 
-                else if (userName == adminStaffUsrName && pwd == adminStaffPwd)
-                {
-                    authenticated = 2;
-                    return authenticated;
-                }
+                    case 2:
+                        if (userName == adminStaffUsrName && pwd == adminStaffPwd)
+                        {
+                            authenticated = 2;
+                            return authenticated;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect login name and/or password\n");
+                        }
+                        break;
 
-                else if (userName == receptionUsrName && pwd == receptionPwd)
-                {
-                    authenticated = 3;
-                    return authenticated;
-                }
-                else
-                {
-                    Console.WriteLine("Incorrect login name and/or password\n");
+                    case 3:
+                        if (userName == receptionUsrName && pwd == receptionPwd)
+                        {
+                            authenticated = 3;
+                            return authenticated;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect login name and/or password\n");
+                        }
+                        break;
                 }
             }
         }
