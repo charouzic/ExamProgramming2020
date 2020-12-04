@@ -25,8 +25,8 @@ namespace ExamProgramming
         public int userType { get; set; }
 
         public int appointmentCounter = 0;
-
         public int caseCounter = 0;
+        public int clientsCounter = 0;
 
 
         public void LoginOption()
@@ -107,7 +107,6 @@ namespace ExamProgramming
                             Console.WriteLine("Incorrect login name and/or password\n");
                         }
                         break;
-
                 }
             }
         }
@@ -241,43 +240,8 @@ namespace ExamProgramming
                 DateTime l_joinedOn = DateTime.ParseExact(line[6], "d-M-yyyy", null);
 
                 // if block because of enumerators
-                // TODO: look if this can be done in nicer way
-                if (l_seniority == 1)
-                {
-                    if (l_specialization == 0)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.Corporate, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                    if (l_specialization == 1)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.FamilyCase, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                    if (l_specialization == 2)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.CriminalCase, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                }
-                if (l_seniority == 2)
-                {
-                    if (l_specialization == 0)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.Corporate, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                    if (l_specialization == 1)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.FamilyCase, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                    if (l_specialization == 2)
-                    {
-                        Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, ESeniority.Junior, ESpecialization.CriminalCase, l_joinedOn);
-                        staffs.Add(lawyer);
-                    }
-                }
+                Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, (ESeniority)l_seniority, (ESpecialization)l_specialization, l_joinedOn);
+                staffs.Add(lawyer);
             }
             
             Console.WriteLine($"Data successfully loaded\n");
@@ -373,19 +337,22 @@ namespace ExamProgramming
 
         public void ListClients(List<Client> clients)
         {
-            foreach (var o in clients)
+            if (clientsCounter == 0)
             {
-                Console.WriteLine(o);
+                Console.WriteLine("\nNo clients are listed yet!");
+            }
+            else if (caseCounter > 0)
+            {
+                foreach (var a in clients)
+                {
+                    Console.WriteLine(a);
+                }
             }
         }
 
 
         public bool timeSlotCheck(List <Appointment> appointmentList, DateTime appointmentDate, int appointmentRoom)
         {
-            // 1. split the appointmentDate and get Date and Time == DONE
-            // 2. iterate through the appointmetns that day and get free time slots (beginning time)
-            // 3. return
-
             List<int> diff = new List<int>();
 
             var date = appointmentDate.ToString("yyyy-MM-dd");
@@ -485,7 +452,6 @@ namespace ExamProgramming
             }
         }
 
-        
 
         public void AddNewCase()
         {
