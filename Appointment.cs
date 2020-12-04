@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 namespace ExamProgramming
 {
     public class Appointment
@@ -14,6 +16,16 @@ namespace ExamProgramming
             ClientId = clientId;
             DateTime = dateTime;
             MeetingRoom = meetingRoom;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder textOutput = new StringBuilder();
+            textOutput.AppendLine($"\nId: {Id}");
+            textOutput.AppendLine($"Client ID: {ClientId}");
+            textOutput.AppendLine($"Time: {DateTime}");
+            textOutput.AppendLine($"Meeting Room: {MeetingRoom}");
+            return textOutput.ToString();
         }
     }
 }

@@ -5,8 +5,9 @@ namespace ExamProgramming
 {
     public interface IClient
     {
-        string AddNewClient(int id, string name, DateTime dob, ESpecialization specialization, string street, int zip, string city);
-        List<Client> ListClients(List<Client> clients);
-
+        // removed the  parameters form AddNewClient() as they will be retrieved from within the method
+        void AddNewClient();
+        // probably just a void as it returns the clients listed
+        void ListClients(List<Client> clients);
     }
 }

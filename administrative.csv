@@ -1,0 +1,5 @@
+Id;FirstName;LastName;JoinedOn;Role
+INT;STRING;STRING;DATETIME;STRING
+1;Anna;Banana;01-09-2015;Back-office
+2;Vlad;Garau;01-10-2018;Front-office 
+3;Luciana;Meda;01-08-2019;Assistant

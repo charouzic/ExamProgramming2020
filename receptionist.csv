@@ -1,0 +1,3 @@
+Id;FirstName;LastName;JoinedOn
+INT;STRING;STRING;DATETIME
+1;Nina;Fabulous;10-04-1990

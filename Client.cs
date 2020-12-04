@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 namespace ExamProgramming
 {
     // usage of abstract class is not relevant here
@@ -21,6 +23,16 @@ namespace ExamProgramming
             Street = street;
             Zip = zip;
             City = city;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder textOutput = new StringBuilder();
+            textOutput.AppendLine($"\nClient Id: {Id}");
+            textOutput.AppendLine($"Name: {Name}");
+            textOutput.AppendLine($"Address: {Street}, {Zip} {City}");
+            textOutput.AppendLine($"Case Type: {Specialization}");
+            return textOutput.ToString();
         }
     }
 }
