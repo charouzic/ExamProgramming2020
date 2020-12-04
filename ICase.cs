@@ -5,7 +5,7 @@ namespace ExamProgramming
 {
     public interface ICase
     {
-        List<Case> ListCases(List<Case> cases);
-        string AddNewCase(int id, int customerId, ESpecialization caseType, DateTime startDate, int totalCharges, int lawyerId);
+        void ListCases(List<Case> cases);
+        void AddNewCase();
     }
 }
