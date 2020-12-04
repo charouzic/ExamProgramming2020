@@ -24,6 +24,10 @@ namespace ExamProgramming
 
         public int userType { get; set; }
 
+        public int appointmentCounter = 0;
+
+        public int caseCounter = 0;
+
 
         public void LoginOption()
         {
@@ -119,6 +123,7 @@ namespace ExamProgramming
                         Console.WriteLine("1) List all cases");
                         Console.WriteLine("2) Add a new case");
                         Console.WriteLine("3) List all appointments");
+                        Console.WriteLine("4) Exit");
                         Console.Write("Press number of your option: ");
                         // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                         int menuOptionLawyer = int.Parse(Console.ReadLine());
@@ -134,6 +139,10 @@ namespace ExamProgramming
                             case 3:
                                 ListAppointment(Appointments);
                                 break;
+                            case 4:
+                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                System.Environment.Exit(1);
+                                break;
                             default:
                                 Console.WriteLine("Invalid input");
                                 break;
@@ -145,6 +154,7 @@ namespace ExamProgramming
                         Console.WriteLine("\nMenu options");
                         Console.WriteLine("1) List all cases");
                         Console.WriteLine("2) List all appointments");
+                        Console.WriteLine("3) Exit");
                         Console.Write("Press number of your option: ");
                         // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                         int menuOptionAdm = int.Parse(Console.ReadLine());
@@ -156,6 +166,10 @@ namespace ExamProgramming
                                 break;
                             case 2:
                                 ListAppointment(Appointments);
+                                break;
+                            case 3:
+                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                System.Environment.Exit(1);
                                 break;
                             default:
                                 Console.WriteLine("Invalid input");
@@ -169,6 +183,7 @@ namespace ExamProgramming
                         Console.WriteLine("2) Add a new appointment");
                         Console.WriteLine("3) List all appointments");
                         Console.WriteLine("4) List all clients");
+                        Console.WriteLine("5) Exit");
                         Console.Write("Press number of your option: ");
                         // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                         int menuOptionReception = int.Parse(Console.ReadLine());
@@ -185,6 +200,10 @@ namespace ExamProgramming
                                 break;
                             case 4:
                                 ListClients(Clients);
+                                break;
+                            case 5:
+                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                System.Environment.Exit(1);
                                 break;
                             default:
                                 Console.WriteLine("Invalid input");
@@ -347,32 +366,9 @@ namespace ExamProgramming
             // TODO: try except to be added as we are working with int (otherwise the app shuts down)
             int c_case = int.Parse(Console.ReadLine());
 
-            switch(c_case)
-            {
-                case 0:
-                    Client newClientCorporate = new Client(c_id, c_name, c_dob, ESpecialization.Corporate, c_street, c_zip, c_city);
-                    Clients.Add(newClientCorporate);
-                    Console.WriteLine($"Client '{c_name}' has been added");
-                    break;
-                    
-
-                case 1:
-                    Client newClientFamily = new Client(c_id, c_name, c_dob, ESpecialization.FamilyCase, c_street, c_zip, c_city);
-                    Clients.Add(newClientFamily);
-                    Console.WriteLine($"Client '{c_name}' has been added");
-                    break;
-                    
-
-                case 2:
-                    Client newClientCriminal = new Client(c_id, c_name, c_dob, ESpecialization.CriminalCase, c_street, c_zip, c_city);
-                    Clients.Add(newClientCriminal);
-                    Console.WriteLine($"Client '{c_name}' has been added");
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid input");
-                    break;
-            }
+            Client newClientCorporate = new Client(c_id, c_name, c_dob, (ESpecialization)c_case, c_street, c_zip, c_city);
+            Clients.Add(newClientCorporate);
+            Console.WriteLine($"Client '{c_name}' has been added");
         }
 
         public void ListClients(List<Client> clients)
@@ -383,55 +379,94 @@ namespace ExamProgramming
             }
         }
 
-        public int appointmentCounter = 0;
+
+        public bool timeSlotCheck(List <Appointment> appointmentList, DateTime appointmentDate, int appointmentRoom)
+        {
+            // 1. split the appointmentDate and get Date and Time == DONE
+            // 2. iterate through the appointmetns that day and get free time slots (beginning time)
+            // 3. return
+
+            List<int> diff = new List<int>();
+
+            var date = appointmentDate.ToString("yyyy-MM-dd");
+
+            foreach (var a in appointmentList)
+            {
+
+                // TODO: check the room in the following if statement!!
+                if (a.DateTime.ToString("yyyy-MM-dd") == date && a.MeetingRoom == (EMeetingRoom)appointmentRoom)
+                {
+                    // finding out if there is a time difference between the 2 datetimes
+                    int result = TimeSpan.Compare(appointmentDate.TimeOfDay, a.DateTime.TimeOfDay);
+                    if(result > 0)
+                    {
+                        TimeSpan duration = appointmentDate - a.DateTime;
+                        diff.Add(int.Parse(duration.TotalMinutes.ToString()));
+                    }
+                    if(result < 0)
+                    {
+                        TimeSpan duration =  a.DateTime - appointmentDate;
+                        diff.Add(int.Parse(duration.TotalMinutes.ToString()));
+                    }
+
+                    if (result == 0)
+                    {
+                        diff.Add(0);
+                    }
+                }
+            }
+
+            // iterating through the list to see if there are any slots smaller than 60 minuntes
+            foreach( int i in diff)
+            {
+                if (i >= 60)
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
 
         public void AddAppointment()
         {
+
             Console.WriteLine("\nPlease provide following information about the appointment");
 
-            Console.Write("Appointment Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int app_Id = int.Parse(Console.ReadLine());
-
-            // wasnt sure how to do it, should we create enums or sth based on the client id?
-            Console.Write("Client Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int app_CId = int.Parse(Console.ReadLine());
-
-            Console.Write("Date and hour of appointment (e.g. 15-12-2020, 12:30): ");
+            Console.Write("Date of an appointment (e.g. 15-12-2020, 12:30): ");
             // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime app_Doa = DateTime.ParseExact(Console.ReadLine(), "dd-MM-yyyy, HH:m", null);
+            // TODO: appointment can start only at full hour
+            DateTime app_Doa = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null);
 
             Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
             // TODO: try except to be added as we are working with int (otherwise the app shuts down)
             int app_Room = int.Parse(Console.ReadLine());
 
-            switch (app_Room)
+            // returning true if there are at least 60 minutes before and after
+            if (timeSlotCheck(Appointments, app_Doa, app_Room) == false)
             {
-                case 0:
-                    Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Aquarium);
-                    Appointments.Add(newAppointmentAqua);
-                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
-                    appointmentCounter++;
-                    break;
+                Console.WriteLine("Time slot if full, choose different time or meeting room.");
+                AddAppointment();
+            }
+            else
+            {
+                Console.Write("Appointment Id: ");
+                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
+                int app_Id = int.Parse(Console.ReadLine());
 
-                case 1:
-                    Appointment newAppointmentCube = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Cube);
-                    Appointments.Add(newAppointmentCube);
-                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
-                    appointmentCounter++;
-                    break;
+                // wasnt sure how to do it, should we create enums or sth based on the client id?
+                Console.Write("Client Id: ");
+                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
+                int app_CId = int.Parse(Console.ReadLine());
 
-                case 2:
-                    Appointment newAppointmentCave = new Appointment(app_Id, app_CId, app_Doa, EMeetingRoom.Cave);
-                    Appointments.Add(newAppointmentCave);
-                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
-                    appointmentCounter++;
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid input");
-                    break;
+                Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, (EMeetingRoom)app_Room);
+                Appointments.Add(newAppointmentAqua);
+                Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
+                appointmentCounter++;
             }
         }
 
@@ -443,14 +478,14 @@ namespace ExamProgramming
             }
             else if (appointmentCounter > 0)
             {
-                foreach (var a in appointments)
+                foreach (object a in appointments)
                 {
                     Console.WriteLine(a);
                 }
             }
         }
 
-        public int caseCounter = 0;
+        
 
         public void AddNewCase()
         {
@@ -474,41 +509,19 @@ namespace ExamProgramming
 
             Console.Write("Start date: (e.g. 15-12-2020, 12:30): ");
             // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime case_Start = DateTime.ParseExact(Console.ReadLine(), "dd-MM-yyyy, HH:m", null); ;
+            DateTime case_Start = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null); ;
 
             Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
             // TODO: try except to be added as we are working with int (otherwise the app shuts down)
             int case_Spe = int.Parse(Console.ReadLine());
 
-
-            switch (case_Spe)
-            {
-                case 0:
-                    Case newCaseCorp = new Case(case_Id, case_CId, ESpecialization.Corporate, case_Start, case_Charges, case_LId);
-                    Cases.Add(newCaseCorp);
-                    Console.WriteLine($"Case with ID {case_Id} has been added");
-                    caseCounter++;
-                    break;
-
-                case 1:
-                    Case newCaseFam = new Case(case_Id, case_CId, ESpecialization.FamilyCase, case_Start, case_Charges, case_LId);
-                    Cases.Add(newCaseFam);
-                    Console.WriteLine($"Case with ID {case_Id} has been added");
-                    caseCounter++;
-                    break;
-
-                case 2:
-                    Case newCaseCrim = new Case(case_Id, case_CId, ESpecialization.CriminalCase, case_Start, case_Charges, case_LId);
-                    Cases.Add(newCaseCrim);
-                    Console.WriteLine($"Case with ID {case_Id} has been added");
-                    caseCounter++;
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid input");
-                    break;
-            }
+            // No need for switch ... you can assign the enum as '(ESpecialization)case_Spe' 
+            Case newCase = new Case(case_Id, case_CId, (ESpecialization)case_Spe, case_Start, case_Charges, case_LId);
+            Cases.Add(newCase);
+            Console.WriteLine($"Case with ID {case_Id} has been added");
+            caseCounter++;
         }
+        
 
         public void ListCases(List<Case> cases)
         {
@@ -525,13 +538,21 @@ namespace ExamProgramming
             }
         }
 
+        // method for testing purposes
         public void initAppointment()
         {
             string apointemnDate = "11-12-2020, 13:00";
             DateTime oApointemnDate = DateTime.ParseExact(apointemnDate, "d-M-yyyy, H:m", null);
 
+            string apointemnDate2 = "11-12-2020, 14:00";
+            DateTime oApointemnDate2 = DateTime.ParseExact(apointemnDate2, "d-M-yyyy, H:m", null);
+
             Appointment newDummyAppointmentAqua = new Appointment(1, 1, oApointemnDate, EMeetingRoom.Aquarium);
             Appointments.Add(newDummyAppointmentAqua);
+            appointmentCounter++;
+
+            Appointment newDummyAppointmentAqua2 = new Appointment(1, 1, oApointemnDate2, EMeetingRoom.Aquarium);
+            Appointments.Add(newDummyAppointmentAqua2);
             appointmentCounter++;
 
             Appointment newDummyAppointmentCube = new Appointment(2, 2, oApointemnDate, EMeetingRoom.Cube);
