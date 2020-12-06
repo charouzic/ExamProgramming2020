@@ -43,7 +43,7 @@ namespace ExamProgramming
                 Login();
             }
 
-            if(userType > 3 || userType < 0)
+            if(userType > 3 || userType <= 0)
             {
                 Console.WriteLine("Invalid input, please choose number 1, 2 or 3");
                 LoginOption();
@@ -79,6 +79,7 @@ namespace ExamProgramming
                         else
                         {
                             Console.WriteLine("Incorrect login name and/or password\n");
+                            LoginOption();
                         }
                         break;
 
@@ -92,6 +93,7 @@ namespace ExamProgramming
                         else
                         {
                             Console.WriteLine("Incorrect login name and/or password\n");
+                            LoginOption();
                         }
                         break;
 
@@ -105,6 +107,7 @@ namespace ExamProgramming
                         else
                         {
                             Console.WriteLine("Incorrect login name and/or password\n");
+                            LoginOption();
                         }
                         break;
                 }
@@ -124,29 +127,36 @@ namespace ExamProgramming
                         Console.WriteLine("3) List all appointments");
                         Console.WriteLine("4) Exit");
                         Console.Write("Press number of your option: ");
-                        // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-                        int menuOptionLawyer = int.Parse(Console.ReadLine());
 
-                        switch (menuOptionLawyer)
+                        try
                         {
-                            case 1:
-                                ListCases(Cases);
-                                break;
-                            case 2:
-                                AddNewCase();
-                                break;
-                            case 3:
-                                ListAppointment(Appointments);
-                                break;
-                            case 4:
-                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
-                                System.Environment.Exit(1);
-                                break;
-                            default:
-                                Console.WriteLine("Invalid input");
-                                break;
+                            int menuOptionLawyer = int.Parse(Console.ReadLine());
 
+                            switch (menuOptionLawyer)
+                            {
+                                case 1:
+                                    ListCases(Cases);
+                                    break;
+                                case 2:
+                                    AddNewCase();
+                                    break;
+                                case 3:
+                                    ListAppointment(Appointments);
+                                    break;
+                                case 4:
+                                    Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                    System.Environment.Exit(1);
+                                    break;
+                                default:
+                                    Console.WriteLine("\nInvalid input! Press correct number 1-4");
+                                    break;
+                            }
                         }
+                        catch(Exception)
+                        {
+                            Console.WriteLine("\nInvalid input! Press correct number 1-4");
+                        }
+
                         break;
 
                     case 2:
@@ -155,24 +165,31 @@ namespace ExamProgramming
                         Console.WriteLine("2) List all appointments");
                         Console.WriteLine("3) Exit");
                         Console.Write("Press number of your option: ");
-                        // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-                        int menuOptionAdm = int.Parse(Console.ReadLine());
-
-                        switch (menuOptionAdm)
+                        
+                        try
                         {
-                            case 1:
-                                ListCases(Cases);
-                                break;
-                            case 2:
-                                ListAppointment(Appointments);
-                                break;
-                            case 3:
-                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
-                                System.Environment.Exit(1);
-                                break;
-                            default:
-                                Console.WriteLine("Invalid input");
-                                break;
+                            int menuOptionAdm = int.Parse(Console.ReadLine());
+
+                            switch (menuOptionAdm)
+                            {
+                                case 1:
+                                    ListCases(Cases);
+                                    break;
+                                case 2:
+                                    ListAppointment(Appointments);
+                                    break;
+                                case 3:
+                                    Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                    System.Environment.Exit(1);
+                                    break;
+                                default:
+                                    Console.WriteLine("\nInvalid input! Press correct number 1-3");
+                                    break;
+                            }
+                        }
+                        catch(Exception)
+                        {
+                            Console.WriteLine("\nInvalid input! Press correct number 1-3");
                         }
                         break;
 
@@ -184,36 +201,44 @@ namespace ExamProgramming
                         Console.WriteLine("4) List all clients");
                         Console.WriteLine("5) Exit");
                         Console.Write("Press number of your option: ");
-                        // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-                        int menuOptionReception = int.Parse(Console.ReadLine());
-                        switch (menuOptionReception)
+
+                        try
                         {
-                            case 1:
-                                AddNewClient();
-                                break;
-                            case 2:
-                                AddAppointment();
-                                break;
-                            case 3:
-                                ListAppointment(Appointments);
-                                break;
-                            case 4:
-                                ListClients(Clients);
-                                break;
-                            case 5:
-                                Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
-                                System.Environment.Exit(1);
-                                break;
-                            default:
-                                Console.WriteLine("Invalid input");
-                                break;
+                            int menuOptionReception = int.Parse(Console.ReadLine());
+
+                            switch (menuOptionReception)
+                            {
+                                case 1:
+                                    AddNewClient();
+                                    break;
+                                case 2:
+                                    AddAppointment();
+                                    break;
+                                case 3:
+                                    ListAppointment(Appointments);
+                                    break;
+                                case 4:
+                                    ListClients(Clients);
+                                    break;
+                                case 5:
+                                    Console.WriteLine("\nThank you for using our app. Hope to see you soon!");
+                                    System.Environment.Exit(1);
+                                    break;
+                                default:
+                                    Console.WriteLine("\nInvalid input! Press correct number 1-5");
+                                    break;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("\nInvalid input! Press correct number 1-5");
                         }
                         break;
                 }
             }
         }
-
-        public void instantiateLawyers(List<Employee> staffs, string path, string fileName)
+        
+        public void instantiateLawyers(List<Employee> lawyers, string path, string fileName)
         {
             string lawyersFullPath = $"{path}{fileName}";
             Console.WriteLine($"Reading data from: '{lawyersFullPath}'");
@@ -222,32 +247,25 @@ namespace ExamProgramming
 
             for (int i = 2; i < lines.Length; ++i)
             {
-                //Console.WriteLine(i);
                 string[] line = lines[i].Split(';');
 
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                 int l_id = int.Parse(line[0]);
                 string l_fName = line[1];
                 string l_lName = line[2];
-                // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
                 DateTime l_dob = DateTime.ParseExact(line[3], "d-M-yyyy", null);
 
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                 int l_seniority = int.Parse(line[4]);
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                 int l_specialization = int.Parse(line[5]);
-                // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
                 DateTime l_joinedOn = DateTime.ParseExact(line[6], "d-M-yyyy", null);
 
-                // if block because of enumerators
                 Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, (ESeniority)l_seniority, (ESpecialization)l_specialization, l_joinedOn);
-                staffs.Add(lawyer);
+                lawyers.Add(lawyer);
             }
             
             Console.WriteLine($"Data successfully loaded\n");
         }
 
-        public void instantiateAdministrative(List<Employee> staffs, string path, string fileName)
+        public void instantiateAdministrative(List<Employee> adminstaff, string path, string fileName)
         {
             string administrativeFullPath = $"{path}{fileName}";
             Console.WriteLine($"Reading data from: '{administrativeFullPath}'");
@@ -256,7 +274,6 @@ namespace ExamProgramming
 
             for (int i = 2; i < lines.Length; ++i)
             {
-                //Console.WriteLine(i);
                 string[] line = lines[i].Split(';');
 
 
@@ -267,14 +284,14 @@ namespace ExamProgramming
                 string a_role = line[4];
 
                 AdminStaff newAdmStaff = new AdminStaff(a_id, a_fName, a_lName, a_joinedOn, a_role);
-                staffs.Add(newAdmStaff);
+                adminstaff.Add(newAdmStaff);
             }
 
             Console.WriteLine($"Data successfully loaded\n");
         }
 
 
-        public void instantiateReceptionist(List<Employee> staffs, string path, string fileName)
+        public void instantiateReceptionist(List<Employee> reception, string path, string fileName)
         {
             string receptionistsFullPath = $"{path}{fileName}";
             Console.WriteLine($"Reading data from: '{receptionistsFullPath}'");
@@ -283,18 +300,15 @@ namespace ExamProgramming
 
             for (int i = 2; i < lines.Length; ++i)
             {
-                //Console.WriteLine(i);
                 string[] line = lines[i].Split(';');
 
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
                 int r_id = int.Parse(line[0]);
                 string r_fName = line[1];
                 string r_lName = line[2];
-                // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
                 DateTime r_joinedOn = DateTime.ParseExact(line[3], "d-M-yyyy", null);
 
                 Receptionist newReceptionist = new Receptionist(r_id, r_fName, r_lName, r_joinedOn);
-                staffs.Add(newReceptionist);
+                reception.Add(newReceptionist);
             }
 
             Console.WriteLine($"Data has been successfully loaded\n");
@@ -306,8 +320,12 @@ namespace ExamProgramming
             Console.WriteLine("\nPlease provide following information about client");
 
             Console.Write("Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int c_id = int.Parse(Console.ReadLine());
+            int c_id;
+            while (!int.TryParse(Console.ReadLine(), out c_id))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("Id: ");
+            }
 
             Console.Write("Name: ");
             string c_name = Console.ReadLine();
@@ -320,20 +338,33 @@ namespace ExamProgramming
             string c_street = Console.ReadLine();
 
             Console.Write("ZIP code: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int c_zip = int.Parse(Console.ReadLine());
+            int c_zip;
+
+            while (!int.TryParse(Console.ReadLine(), out c_zip))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("ZIP code: ");
+            }
 
             Console.Write("City: ");
             string c_city = Console.ReadLine();
 
-            Console.Write("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int c_case = int.Parse(Console.ReadLine());
 
-            Client newClientCorporate = new Client(c_id, c_name, c_dob, (ESpecialization)c_case, c_street, c_zip, c_city);
-            Clients.Add(newClientCorporate);
+            Console.Write("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
+            int c_case;
+            
+            while (!(int.TryParse(Console.ReadLine(), out c_case) && (c_case >= 0 && c_case < 3)))
+            {
+                Console.WriteLine("Wrong Value, try again: ");
+                Console.WriteLine("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
+            }
+
+            Client newClient = new Client(c_id, c_name, c_dob, (ESpecialization)c_case, c_street, c_zip, c_city);
+            Clients.Add(newClient);
+            clientsCounter++;
             Console.WriteLine($"Client '{c_name}' has been added");
         }
+
 
         public void ListClients(List<Client> clients)
         {
@@ -341,7 +372,7 @@ namespace ExamProgramming
             {
                 Console.WriteLine("\nNo clients are listed yet!");
             }
-            else if (caseCounter > 0)
+            else if (clientsCounter > 0)
             {
                 foreach (var a in clients)
                 {
@@ -360,7 +391,6 @@ namespace ExamProgramming
             foreach (var a in appointmentList)
             {
 
-                // TODO: check the room in the following if statement!!
                 if (a.DateTime.ToString("yyyy-MM-dd") == date && a.MeetingRoom == (EMeetingRoom)appointmentRoom)
                 {
                     // finding out if there is a time difference between the 2 datetimes
@@ -406,12 +436,15 @@ namespace ExamProgramming
 
             Console.Write("Date of an appointment (e.g. 15-12-2020, 12:30): ");
             // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            // TODO: appointment can start only at full hour
             DateTime app_Doa = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null);
 
             Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int app_Room = int.Parse(Console.ReadLine());
+            int app_Room; 
+            while (!(int.TryParse(Console.ReadLine(), out app_Room) && (app_Room >= 0 && app_Room < 3)))
+            {
+                Console.WriteLine("Wrong Value, try again: ");
+                Console.WriteLine("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
+            }
 
             // returning true if there are at least 60 minutes before and after
             if (timeSlotCheck(Appointments, app_Doa, app_Room) == false)
@@ -422,13 +455,22 @@ namespace ExamProgramming
             else
             {
                 Console.Write("Appointment Id: ");
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-                int app_Id = int.Parse(Console.ReadLine());
+                int app_Id;
 
-                // wasnt sure how to do it, should we create enums or sth based on the client id?
+                while (!int.TryParse(Console.ReadLine(), out app_Id))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Appointment Id: ");
+                }
+
                 Console.Write("Client Id: ");
-                // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-                int app_CId = int.Parse(Console.ReadLine());
+                int app_CId;
+
+                while (!int.TryParse(Console.ReadLine(), out app_CId))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Client Id: ");
+                }
 
                 Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, (EMeetingRoom)app_Room);
                 Appointments.Add(newAppointmentAqua);
@@ -445,7 +487,7 @@ namespace ExamProgramming
             }
             else if (appointmentCounter > 0)
             {
-                foreach (object a in appointments)
+                foreach (var a in appointments)
                 {
                     Console.WriteLine(a);
                 }
@@ -458,30 +500,56 @@ namespace ExamProgramming
             Console.WriteLine("\nPlease provide following information about the case");
 
             Console.Write("Case Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int case_Id = int.Parse(Console.ReadLine());
+            int case_Id;
+            while (!int.TryParse(Console.ReadLine(), out case_Id))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("Case Id: ");
+            }
 
             Console.Write("Lawyer Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int case_LId = int.Parse(Console.ReadLine());
+            int case_LId;
+
+            while (!int.TryParse(Console.ReadLine(), out case_LId))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("Lawyer Id: ");
+            }
 
             Console.Write("Customer Id: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int case_CId = int.Parse(Console.ReadLine());
+            int case_CId;
 
-            Console.Write("Total charges: ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int case_Charges = int.Parse(Console.ReadLine());
+            while (!int.TryParse(Console.ReadLine(), out case_CId))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("Customer Id: ");
+            }
+
+
+            Console.Write("Total charges (DKK): ");
+            int case_Charges;
+
+            while (!int.TryParse(Console.ReadLine(), out case_Charges))
+            {
+                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.Write("Total charges (DKK): ");
+            }
+
 
             Console.Write("Start date: (e.g. 15-12-2020, 12:30): ");
             // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime case_Start = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null); ;
+            DateTime case_Start = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null);
+
 
             Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
-            // TODO: try except to be added as we are working with int (otherwise the app shuts down)
-            int case_Spe = int.Parse(Console.ReadLine());
+            int case_Spe;
 
-            // No need for switch ... you can assign the enum as '(ESpecialization)case_Spe' 
+            while (!(int.TryParse(Console.ReadLine(), out case_Spe) && (case_Spe >= 0 && case_Spe < 3)))
+            {
+                Console.WriteLine("Wrong Value, try again: ");
+                Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
+            }
+
             Case newCase = new Case(case_Id, case_CId, (ESpecialization)case_Spe, case_Start, case_Charges, case_LId);
             Cases.Add(newCase);
             Console.WriteLine($"Case with ID {case_Id} has been added");
@@ -534,17 +602,18 @@ namespace ExamProgramming
 
         public void Process()
         {
-            //instantiateLawyers(Staffs, "/users/viki/desktop/c#/exam/data/", "lawyers.csv");
-            //instantiateAdministrative(Staffs, "/users/viki/desktop/c#/exam/data/", "administrative.csv");
-            //instantiateReceptionist(Staffs, "/users/viki/desktop/c#/exam/data/", "receptionist.csv");
             /*
+            instantiateLawyers(Staffs, "/users/viki/desktop/c#/exam_data/", "lawyers.csv");
+            instantiateAdministrative(Staffs, "/users/viki/desktop/c#/exam_data/", "administrative.csv");
+            instantiateReceptionist(Staffs, "/users/viki/desktop/c#/exam_data/", "receptionist.csv");
+
+            Console.WriteLine("Staff list:");
             foreach (object o in Staffs)
             {
                 Console.WriteLine(o);
             }
             */
-            //AddNewClient();
-            //ListClients(Clients);
+
             initAppointment();
             Menu(Login());
 
