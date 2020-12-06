@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace ExamProgramming
@@ -31,23 +32,31 @@ namespace ExamProgramming
 
         public void LoginOption()
         {
-            Console.WriteLine("Choose your login option. Press [1] for Lawyer, press [2] for Admin or press [3] for Receptionist.");
-            Console.Write("Your choice: ");
             try
             {
-                userType = int.Parse(Console.ReadLine());
-            }
-            catch (Exception)
-            {
-                Console.WriteLine($"\nInvalid input: choose the correct number of choice");
-                Login();
-            }
+                Console.WriteLine("Choose your login option. Press [1] for Lawyer, press [2] for Admin or press [3] for Receptionist.");
+                Console.Write("Your choice: ");
+                try
+                {
+                    userType = int.Parse(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"\nInvalid input: choose the correct number of choice");
+                    LoginOption();
+                }
 
-            if(userType > 3 || userType <= 0)
-            {
-                Console.WriteLine("Invalid input, please choose number 1, 2 or 3");
-                LoginOption();
+                if (userType > 3 || userType <= 0)
+                {
+                    Console.WriteLine("Invalid input, please choose number 1, 2 or 3");
+                    LoginOption();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
+            
         }
 
         public int Login()
@@ -138,7 +147,7 @@ namespace ExamProgramming
                                     ListCases(Cases);
                                     break;
                                 case 2:
-                                    AddNewCase();
+                                    AddNewCase(Staffs);
                                     break;
                                 case 3:
                                     ListAppointment(Appointments);
@@ -240,243 +249,309 @@ namespace ExamProgramming
         
         public void instantiateLawyers(List<Employee> lawyers, string path, string fileName)
         {
-            string lawyersFullPath = $"{path}{fileName}";
-            Console.WriteLine($"Reading data from: '{lawyersFullPath}'");
-            string[] lines = File.ReadAllLines(lawyersFullPath);
-
-
-            for (int i = 2; i < lines.Length; ++i)
+            try
             {
-                string[] line = lines[i].Split(';');
+                string lawyersFullPath = $"{path}{fileName}";
+                Console.WriteLine($"Reading data from: '{lawyersFullPath}'");
+                string[] lines = File.ReadAllLines(lawyersFullPath);
 
-                int l_id = int.Parse(line[0]);
-                string l_fName = line[1];
-                string l_lName = line[2];
-                DateTime l_dob = DateTime.ParseExact(line[3], "d-M-yyyy", null);
+                for (int i = 2; i < lines.Length; ++i)
+                {
+                    string[] line = lines[i].Split(';');
 
-                int l_seniority = int.Parse(line[4]);
-                int l_specialization = int.Parse(line[5]);
-                DateTime l_joinedOn = DateTime.ParseExact(line[6], "d-M-yyyy", null);
+                    int l_id = int.Parse(line[0]);
+                    string l_fName = line[1];
+                    string l_lName = line[2];
+                    DateTime l_dob = DateTime.ParseExact(line[3], "d-M-yyyy", null);
 
-                Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, (ESeniority)l_seniority, (ESpecialization)l_specialization, l_joinedOn);
-                lawyers.Add(lawyer);
+                    int l_seniority = int.Parse(line[4]);
+                    int l_specialization = int.Parse(line[5]);
+                    DateTime l_joinedOn = DateTime.ParseExact(line[6], "d-M-yyyy", null);
+
+                    Lawyer lawyer = new Lawyer(l_id, l_fName, l_lName, l_dob, (ESeniority)l_seniority, (ESpecialization)l_specialization, l_joinedOn);
+                    lawyers.Add(lawyer);
+                }
+
+                Console.WriteLine($"Data successfully loaded\n");
             }
-            
-            Console.WriteLine($"Data successfully loaded\n");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
         }
 
         public void instantiateAdministrative(List<Employee> adminstaff, string path, string fileName)
         {
-            string administrativeFullPath = $"{path}{fileName}";
-            Console.WriteLine($"Reading data from: '{administrativeFullPath}'");
-            string[] lines = File.ReadAllLines(administrativeFullPath);
-
-
-            for (int i = 2; i < lines.Length; ++i)
+            try
             {
-                string[] line = lines[i].Split(';');
+                string administrativeFullPath = $"{path}{fileName}";
+                Console.WriteLine($"Reading data from: '{administrativeFullPath}'");
+                string[] lines = File.ReadAllLines(administrativeFullPath);
 
 
-                int a_id = int.Parse(line[0]);
-                string a_fName = line[1];
-                string a_lName = line[2];
-                DateTime a_joinedOn = DateTime.ParseExact(line[3], "d-M-yyyy", null);
-                string a_role = line[4];
+                for (int i = 2; i < lines.Length; ++i)
+                {
+                    string[] line = lines[i].Split(';');
 
-                AdminStaff newAdmStaff = new AdminStaff(a_id, a_fName, a_lName, a_joinedOn, a_role);
-                adminstaff.Add(newAdmStaff);
+
+                    int a_id = int.Parse(line[0]);
+                    string a_fName = line[1];
+                    string a_lName = line[2];
+                    DateTime a_joinedOn = DateTime.ParseExact(line[3], "d-M-yyyy", null);
+                    string a_role = line[4];
+
+                    AdminStaff newAdmStaff = new AdminStaff(a_id, a_fName, a_lName, a_joinedOn, a_role);
+                    adminstaff.Add(newAdmStaff);
+                }
+
+                Console.WriteLine($"Data successfully loaded\n");
             }
-
-            Console.WriteLine($"Data successfully loaded\n");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
         }
 
 
         public void instantiateReceptionist(List<Employee> reception, string path, string fileName)
         {
-            string receptionistsFullPath = $"{path}{fileName}";
-            Console.WriteLine($"Reading data from: '{receptionistsFullPath}'");
-            string[] lines = File.ReadAllLines(receptionistsFullPath);
-
-
-            for (int i = 2; i < lines.Length; ++i)
+            try
             {
-                string[] line = lines[i].Split(';');
+                string receptionistsFullPath = $"{path}{fileName}";
+                Console.WriteLine($"Reading data from: '{receptionistsFullPath}'");
+                string[] lines = File.ReadAllLines(receptionistsFullPath);
 
-                int r_id = int.Parse(line[0]);
-                string r_fName = line[1];
-                string r_lName = line[2];
-                DateTime r_joinedOn = DateTime.ParseExact(line[3], "d-M-yyyy", null);
 
-                Receptionist newReceptionist = new Receptionist(r_id, r_fName, r_lName, r_joinedOn);
-                reception.Add(newReceptionist);
+                for (int i = 2; i < lines.Length; ++i)
+                {
+                    string[] line = lines[i].Split(';');
+
+                    int r_id = int.Parse(line[0]);
+                    string r_fName = line[1];
+                    string r_lName = line[2];
+                    DateTime r_joinedOn = DateTime.ParseExact(line[3], "d-M-yyyy", null);
+
+                    Receptionist newReceptionist = new Receptionist(r_id, r_fName, r_lName, r_joinedOn);
+                    reception.Add(newReceptionist);
+                }
+
+                Console.WriteLine($"Data has been successfully loaded\n");
             }
-
-            Console.WriteLine($"Data has been successfully loaded\n");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
+            
         }
 
 
         public void AddNewClient()
         {
-            Console.WriteLine("\nPlease provide following information about client");
-
-            Console.Write("Id: ");
-            int c_id;
-            while (!int.TryParse(Console.ReadLine(), out c_id))
+            try
             {
-                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.WriteLine("\nPlease provide following information about client");
+
                 Console.Write("Id: ");
-            }
+                int c_id;
+                while (!int.TryParse(Console.ReadLine(), out c_id))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Id: ");
+                }
 
-            Console.Write("Name: ");
-            string c_name = Console.ReadLine();
+                Console.Write("Name: ");
+                string c_name = Console.ReadLine();
 
-            Console.Write("Date of Birth (dd-MM-yyyy, e.g.: 14-06-1997): ");
-            // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime c_dob = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy", null);
+                Console.Write("Date of Birth (dd-MM-yyyy, e.g.: 14-06-1997): ");
+                DateTime c_dob;
 
-            Console.Write("Street: ");
-            string c_street = Console.ReadLine();
+                while (!DateTime.TryParseExact(Console.ReadLine(), "d-M-yyyy", null, DateTimeStyles.None, out c_dob))
+                {
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.Write("Date of Birth (dd-MM-yyyy, e.g.: 14-06-1997): ");
+                }
 
-            Console.Write("ZIP code: ");
-            int c_zip;
+                Console.Write("Street: ");
+                string c_street = Console.ReadLine();
 
-            while (!int.TryParse(Console.ReadLine(), out c_zip))
-            {
-                Console.WriteLine("Please Enter a valid numerical value!");
                 Console.Write("ZIP code: ");
+                int c_zip;
+
+                while (!int.TryParse(Console.ReadLine(), out c_zip))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("ZIP code: ");
+                }
+
+                Console.Write("City: ");
+                string c_city = Console.ReadLine();
+
+
+                Console.Write("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
+                int c_case;
+
+                while (!(int.TryParse(Console.ReadLine(), out c_case) && (c_case >= 0 && c_case < 3)))
+                {
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.WriteLine("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
+                }
+
+                Client newClient = new Client(c_id, c_name, c_dob, (ESpecialization)c_case, c_street, c_zip, c_city);
+                Clients.Add(newClient);
+                clientsCounter++;
+                Console.WriteLine($"Client '{c_name}' has been added");
             }
-
-            Console.Write("City: ");
-            string c_city = Console.ReadLine();
-
-
-            Console.Write("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
-            int c_case;
-            
-            while (!(int.TryParse(Console.ReadLine(), out c_case) && (c_case >= 0 && c_case < 3)))
+            catch (Exception ex)
             {
-                Console.WriteLine("Wrong Value, try again: ");
-                Console.WriteLine("Type of case (0 = Corporate, 1 = FamilyCase, 2 = CriminalCase): ");
+                Console.WriteLine($"Error occured: {ex.Message}");
             }
-
-            Client newClient = new Client(c_id, c_name, c_dob, (ESpecialization)c_case, c_street, c_zip, c_city);
-            Clients.Add(newClient);
-            clientsCounter++;
-            Console.WriteLine($"Client '{c_name}' has been added");
         }
 
 
         public void ListClients(List<Client> clients)
         {
-            if (clientsCounter == 0)
+            try
             {
-                Console.WriteLine("\nNo clients are listed yet!");
-            }
-            else if (clientsCounter > 0)
-            {
-                foreach (var a in clients)
+                if (clientsCounter == 0)
                 {
-                    Console.WriteLine(a);
+                    Console.WriteLine("\nNo clients are listed yet!");
                 }
+                else if (clientsCounter > 0)
+                {
+                    foreach (var a in clients)
+                    {
+                        Console.WriteLine(a);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
             }
         }
 
 
         public bool timeSlotCheck(List <Appointment> appointmentList, DateTime appointmentDate, int appointmentRoom)
         {
-            List<int> diff = new List<int>();
-
-            var date = appointmentDate.ToString("yyyy-MM-dd");
-
-            foreach (var a in appointmentList)
+            try
             {
+                List<int> diff = new List<int>();
 
-                if (a.DateTime.ToString("yyyy-MM-dd") == date && a.MeetingRoom == (EMeetingRoom)appointmentRoom)
+                var date = appointmentDate.ToString("yyyy-MM-dd");
+
+                foreach (var a in appointmentList)
                 {
-                    // finding out if there is a time difference between the 2 datetimes
-                    int result = TimeSpan.Compare(appointmentDate.TimeOfDay, a.DateTime.TimeOfDay);
-                    if(result > 0)
-                    {
-                        TimeSpan duration = appointmentDate - a.DateTime;
-                        diff.Add(int.Parse(duration.TotalMinutes.ToString()));
-                    }
-                    if(result < 0)
-                    {
-                        TimeSpan duration =  a.DateTime - appointmentDate;
-                        diff.Add(int.Parse(duration.TotalMinutes.ToString()));
-                    }
 
-                    if (result == 0)
+                    if (a.DateTime.ToString("yyyy-MM-dd") == date && a.MeetingRoom == (EMeetingRoom)appointmentRoom)
                     {
-                        diff.Add(0);
+                        // finding out if there is a time difference between the 2 datetimes
+                        int result = TimeSpan.Compare(appointmentDate.TimeOfDay, a.DateTime.TimeOfDay);
+                        if (result > 0)
+                        {
+                            TimeSpan duration = appointmentDate - a.DateTime;
+                            diff.Add(int.Parse(duration.TotalMinutes.ToString()));
+                        }
+                        if (result < 0)
+                        {
+                            TimeSpan duration = a.DateTime - appointmentDate;
+                            diff.Add(int.Parse(duration.TotalMinutes.ToString()));
+                        }
+
+                        if (result == 0)
+                        {
+                            diff.Add(0);
+                        }
                     }
                 }
-            }
 
-            // iterating through the list to see if there are any slots smaller than 60 minuntes
-            foreach( int i in diff)
+                // iterating through the list to see if there are any slots smaller than 60 minuntes
+                foreach (int i in diff)
+                {
+                    if (i >= 60)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
             {
-                if (i >= 60)
-                {
-                    continue;
-                }
-                else
-                {
-                    return false;
-                }
+                Console.WriteLine($"Error occured: {ex.Message}");
+                return false;
             }
-            return true;
         }
         
 
         public void AddAppointment()
         {
-
-            Console.WriteLine("\nPlease provide following information about the appointment");
-
-            Console.Write("Date of an appointment (e.g. 15-12-2020, 12:30): ");
-            // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime app_Doa = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null);
-
-            Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
-            int app_Room; 
-            while (!(int.TryParse(Console.ReadLine(), out app_Room) && (app_Room >= 0 && app_Room < 3)))
+            try
             {
-                Console.WriteLine("Wrong Value, try again: ");
-                Console.WriteLine("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
-            }
+                Console.WriteLine("\nPlease provide following information about the appointment");
 
-            // returning true if there are at least 60 minutes before and after
-            if (timeSlotCheck(Appointments, app_Doa, app_Room) == false)
-            {
-                Console.WriteLine("Time slot if full, choose different time or meeting room.");
-                AddAppointment();
-            }
-            else
-            {
-                Console.Write("Appointment Id: ");
-                int app_Id;
+                Console.Write("Date of an appointment (e.g. 15-12-2020 13:30): ");
+                DateTime app_Doa;
 
-                while (!int.TryParse(Console.ReadLine(), out app_Id))
+                /*
+                DateTime firstAppoint = DateTime.ParseExact("8:00", "H:m", null);
+                DateTime lastAppoint = DateTime.ParseExact("17:00", "H:m", null);
+                */
+
+                // TODO check the opening hours
+                while ((!DateTime.TryParseExact(Console.ReadLine(), "d-M-yyyy H:m", null, DateTimeStyles.None, out app_Doa)))
                 {
-                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.Write("Date of an appointment (e.g. 15-12-2020 13:30): ");
+                }
+
+                Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
+                int app_Room;
+                while (!(int.TryParse(Console.ReadLine(), out app_Room) && (app_Room >= 0 && app_Room < 3)))
+                {
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.WriteLine("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
+                }
+
+                // returning true if there are at least 60 minutes before and after
+                if (timeSlotCheck(Appointments, app_Doa, app_Room) == false)
+                {
+                    Console.WriteLine("Time slot if full, choose different time or meeting room.");
+                    AddAppointment();
+                }
+                else
+                {
                     Console.Write("Appointment Id: ");
-                }
+                    int app_Id;
 
-                Console.Write("Client Id: ");
-                int app_CId;
+                    while (!int.TryParse(Console.ReadLine(), out app_Id))
+                    {
+                        Console.WriteLine("Please Enter a valid numerical value!");
+                        Console.Write("Appointment Id: ");
+                    }
 
-                while (!int.TryParse(Console.ReadLine(), out app_CId))
-                {
-                    Console.WriteLine("Please Enter a valid numerical value!");
                     Console.Write("Client Id: ");
-                }
+                    int app_CId;
 
-                Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, (EMeetingRoom)app_Room);
-                Appointments.Add(newAppointmentAqua);
-                Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
-                appointmentCounter++;
+                    while (!int.TryParse(Console.ReadLine(), out app_CId))
+                    {
+                        Console.WriteLine("Please Enter a valid numerical value!");
+                        Console.Write("Client Id: ");
+                    }
+
+                    Appointment newAppointmentAqua = new Appointment(app_Id, app_CId, app_Doa, (EMeetingRoom)app_Room);
+                    Appointments.Add(newAppointmentAqua);
+                    Console.WriteLine($"Appointment with ID {app_Id} on {app_Doa} has been added");
+                    appointmentCounter++;
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
+            
         }
 
         public void ListAppointment(List<Appointment> appointments)
@@ -495,67 +570,96 @@ namespace ExamProgramming
         }
 
 
-        public void AddNewCase()
+        public void AddNewCase(List<Employee> lawyers)
         {
-            Console.WriteLine("\nPlease provide following information about the case");
-
-            Console.Write("Case Id: ");
-            int case_Id;
-            while (!int.TryParse(Console.ReadLine(), out case_Id))
+            try
             {
-                Console.WriteLine("Please Enter a valid numerical value!");
+                Console.WriteLine("\nPlease provide following information about the case");
+
                 Console.Write("Case Id: ");
-            }
+                int case_Id;
+                while (!int.TryParse(Console.ReadLine(), out case_Id))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Case Id: ");
+                }
 
-            Console.Write("Lawyer Id: ");
-            int case_LId;
-
-            while (!int.TryParse(Console.ReadLine(), out case_LId))
-            {
-                Console.WriteLine("Please Enter a valid numerical value!");
                 Console.Write("Lawyer Id: ");
-            }
+                int case_LId;
 
-            Console.Write("Customer Id: ");
-            int case_CId;
+                while (!int.TryParse(Console.ReadLine(), out case_LId))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Lawyer Id: ");
+                }
 
-            while (!int.TryParse(Console.ReadLine(), out case_CId))
-            {
-                Console.WriteLine("Please Enter a valid numerical value!");
                 Console.Write("Customer Id: ");
-            }
+                int case_CId;
+
+                while (!int.TryParse(Console.ReadLine(), out case_CId))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Customer Id: ");
+                }
 
 
-            Console.Write("Total charges (DKK): ");
-            int case_Charges;
-
-            while (!int.TryParse(Console.ReadLine(), out case_Charges))
-            {
-                Console.WriteLine("Please Enter a valid numerical value!");
                 Console.Write("Total charges (DKK): ");
-            }
+                int case_Charges;
+
+                while (!int.TryParse(Console.ReadLine(), out case_Charges))
+                {
+                    Console.WriteLine("Please Enter a valid numerical value!");
+                    Console.Write("Total charges (DKK): ");
+                }
 
 
-            Console.Write("Start date: (e.g. 15-12-2020, 12:30): ");
-            // TODO: try except to be added as we are working with DateTime (otherwise the app shuts down)
-            DateTime case_Start = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy, H:m", null);
+                Console.Write("Start date: (e.g. 15-12-2020): ");
+                DateTime case_Start;
 
+                while (!DateTime.TryParseExact(Console.ReadLine(), "d-M-yyyy", null, DateTimeStyles.None, out case_Start))
+                {
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.Write("Start date: (e.g. 15-12-2020): ");
+                }
 
-            Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
-            int case_Spe;
-
-            while (!(int.TryParse(Console.ReadLine(), out case_Spe) && (case_Spe >= 0 && case_Spe < 3)))
-            {
-                Console.WriteLine("Wrong Value, try again: ");
                 Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
-            }
+                int case_Spe;
 
-            Case newCase = new Case(case_Id, case_CId, (ESpecialization)case_Spe, case_Start, case_Charges, case_LId);
-            Cases.Add(newCase);
-            Console.WriteLine($"Case with ID {case_Id} has been added");
-            caseCounter++;
+                ESpecialization case_LSpec = 0;
+                foreach (Lawyer element in lawyers)
+                {
+                    if (element.Id == case_LId)
+                    {
+                        case_LSpec = element.Specialization;
+                        break;
+                    }
+                }
+
+                while (!(int.TryParse(Console.ReadLine(), out case_Spe) && (case_Spe >= 0 && case_Spe < 3)))
+                {
+                    Console.WriteLine("Wrong Value, try again: ");
+                    Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
+                }
+
+                if ((ESpecialization)case_Spe == case_LSpec)
+                {
+                    Case newCase = new Case(case_Id, case_CId, (ESpecialization)case_Spe, case_Start, case_Charges, case_LId);
+                    Cases.Add(newCase);
+                    Console.WriteLine($"Case with ID {case_Id} has been added");
+                    caseCounter++;
+                }
+                else
+                {
+                    Console.WriteLine($"Error: This lawyer is not specialized in {(ESpecialization)case_Spe} cases. Please try creating a case again");
+                    AddNewCase(Staffs);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
         }
-        
+
 
         public void ListCases(List<Case> cases)
         {
@@ -575,50 +679,60 @@ namespace ExamProgramming
         // method for testing purposes
         public void initAppointment()
         {
-            string apointemnDate = "11-12-2020, 13:00";
-            DateTime oApointemnDate = DateTime.ParseExact(apointemnDate, "d-M-yyyy, H:m", null);
+            try
+            {
+                string apointemnDate = "11-12-2020, 13:00";
+                DateTime oApointemnDate = DateTime.ParseExact(apointemnDate, "d-M-yyyy, H:m", null);
 
-            string apointemnDate2 = "11-12-2020, 14:00";
-            DateTime oApointemnDate2 = DateTime.ParseExact(apointemnDate2, "d-M-yyyy, H:m", null);
+                string apointemnDate2 = "11-12-2020, 14:00";
+                DateTime oApointemnDate2 = DateTime.ParseExact(apointemnDate2, "d-M-yyyy, H:m", null);
 
-            Appointment newDummyAppointmentAqua = new Appointment(1, 1, oApointemnDate, EMeetingRoom.Aquarium);
-            Appointments.Add(newDummyAppointmentAqua);
-            appointmentCounter++;
+                Appointment newDummyAppointmentAqua = new Appointment(1, 1, oApointemnDate, EMeetingRoom.Aquarium);
+                Appointments.Add(newDummyAppointmentAqua);
+                appointmentCounter++;
 
-            Appointment newDummyAppointmentAqua2 = new Appointment(1, 1, oApointemnDate2, EMeetingRoom.Aquarium);
-            Appointments.Add(newDummyAppointmentAqua2);
-            appointmentCounter++;
+                Appointment newDummyAppointmentAqua2 = new Appointment(1, 1, oApointemnDate2, EMeetingRoom.Aquarium);
+                Appointments.Add(newDummyAppointmentAqua2);
+                appointmentCounter++;
 
-            Appointment newDummyAppointmentCube = new Appointment(2, 2, oApointemnDate, EMeetingRoom.Cube);
-            Appointments.Add(newDummyAppointmentCube);
-            appointmentCounter++;
+                Appointment newDummyAppointmentCube = new Appointment(2, 2, oApointemnDate, EMeetingRoom.Cube);
+                Appointments.Add(newDummyAppointmentCube);
+                appointmentCounter++;
 
-            Appointment newDummyAppointmentCave = new Appointment(3, 3, oApointemnDate, EMeetingRoom.Cave);
-            Appointments.Add(newDummyAppointmentCave);
-            appointmentCounter++;
-
-
+                Appointment newDummyAppointmentCave = new Appointment(3, 3, oApointemnDate, EMeetingRoom.Cave);
+                Appointments.Add(newDummyAppointmentCave);
+                appointmentCounter++;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
         }
 
         public void Process()
         {
-            /*
-            instantiateLawyers(Staffs, "/users/viki/desktop/c#/exam_data/", "lawyers.csv");
-            instantiateAdministrative(Staffs, "/users/viki/desktop/c#/exam_data/", "administrative.csv");
-            instantiateReceptionist(Staffs, "/users/viki/desktop/c#/exam_data/", "receptionist.csv");
-
-            Console.WriteLine("Staff list:");
-            foreach (object o in Staffs)
+            
+            try
             {
-                Console.WriteLine(o);
+                instantiateLawyers(Staffs, "/users/viki/desktop/c#/exam_data/", "lawyers.csv");
+                instantiateAdministrative(Staffs, "/users/viki/desktop/c#/exam_data/", "administrative.csv");
+                instantiateReceptionist(Staffs, "/users/viki/desktop/c#/exam_data/", "receptionist.csv");
             }
-            */
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
 
             initAppointment();
-            Menu(Login());
 
+            try
+            {
+                Menu(Login());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+            }
         }
-
-        
     }
 }

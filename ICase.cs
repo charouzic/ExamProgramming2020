@@ -6,6 +6,6 @@ namespace ExamProgramming
     public interface ICase
     {
         void ListCases(List<Case> cases);
-        void AddNewCase();
+        void AddNewCase(List<Employee> lawyers);
     }
 }
