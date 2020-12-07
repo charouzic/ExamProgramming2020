@@ -493,19 +493,19 @@ namespace ExamProgramming
                 Console.WriteLine("\nPlease provide following information about the appointment");
 
                 Console.Write("Date of an appointment (e.g. 15-12-2020 13:30): ");
-                DateTime app_Doa;
+                DateTime app_Doa;// = DateTime.ParseExact(Console.ReadLine(), "d-M-yyyy H:m", null);
 
-                /*
+                DateTime todaysDate = DateTime.Now;
                 DateTime firstAppoint = DateTime.ParseExact("8:00", "H:m", null);
                 DateTime lastAppoint = DateTime.ParseExact("17:00", "H:m", null);
-                */
 
-                // TODO check the opening hours
-                while ((!DateTime.TryParseExact(Console.ReadLine(), "d-M-yyyy H:m", null, DateTimeStyles.None, out app_Doa)))
+                while ((!DateTime.TryParseExact(Console.ReadLine(), "d-M-yyyy H:m", null, DateTimeStyles.None, out app_Doa)) || (app_Doa.TimeOfDay < firstAppoint.TimeOfDay || app_Doa.TimeOfDay > lastAppoint.TimeOfDay || app_Doa.Date < todaysDate.Date))
                 {
-                    Console.WriteLine("Wrong Value, try again: ");
-                    Console.Write("Date of an appointment (e.g. 15-12-2020 13:30): ");
+                    Console.WriteLine("\nWrong Value, try again");
+                    Console.WriteLine("Beware of opening hours 8:00-18:00 hence last appointment is possible at 17:00");
+                    Console.Write("\nDate of an appointment (e.g. 15-12-2020 13:30): ");
                 }
+
 
                 Console.Write("Room (Aquarium = 0, Cube = 1, Cave = 2): ");
                 int app_Room;
@@ -612,7 +612,6 @@ namespace ExamProgramming
                     Console.Write("Total charges (DKK): ");
                 }
 
-
                 Console.Write("Start date: (e.g. 15-12-2020): ");
                 DateTime case_Start;
 
@@ -625,6 +624,7 @@ namespace ExamProgramming
                 Console.Write("Case type (Corporate = 0, Family = 1, Criminal = 2): ");
                 int case_Spe;
 
+                // create a list of lawyers id with a specialization 
                 ESpecialization case_LSpec = 0;
                 foreach (Lawyer element in lawyers)
                 {
@@ -711,7 +711,6 @@ namespace ExamProgramming
 
         public void Process()
         {
-            
             try
             {
                 instantiateLawyers(Staffs, "/users/viki/desktop/c#/exam_data/", "lawyers.csv");
